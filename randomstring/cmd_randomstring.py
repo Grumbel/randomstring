@@ -20,8 +20,9 @@ import sys
 import string
 import re
 import argparse
+import itertools
 
-from randomstring.randomstring import make_random_string
+from randomstring.randomstring import make_random_string, make_random_unicode_string
 
 
 class RangeArg:
@@ -47,9 +48,11 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Generate random strings')
     parser.add_argument('-c', '--characters', type=str,
                         default=(string.ascii_letters + string.digits),
-                        help="Characters to include in the generated strings")
-    parser.add_argument('-n', '--number', type=int, default=0,
-                        help="Number of strings to generate (default: 0)")
+                        help="List of characters to include in the generated strings")
+    parser.add_argument('-u', '--unicode', action='store_true', default=False,
+                        help="Use unicode characters")
+    parser.add_argument('-n', '--number', type=int, default=1,
+                        help="Number of strings to generate (default: 1)")
     parser.add_argument('-l', '--length', type=RangeArg, default=RangeArg("8-12"),
                         help="Length of the string (default: \"8-12\")")
     return parser.parse_args()
@@ -69,13 +72,17 @@ def main():
     args = parse_args()
 
     if args.number == 0:
-        while True:
-            text = make_random_string(args.characters, args.length.as_range())
-            print(text)
+        seq = itertools.repeat(None)
     else:
-        for _ in range(args.number):
+        seq = range(args.number)
+
+    for _ in seq:
+        if args.unicode:
+            text = make_random_unicode_string(args.length.as_range())
+        else:
             text = make_random_string(args.characters, args.length.as_range())
-            print(text)
+
+        print(text)
 
 
 # EOF #
