@@ -94,6 +94,7 @@ def main():
                 print(k)
             sys.exit(0)
 
+        characters = ""
         for block in args.unicode_blocks.split(","):
             characters += "".join([chr(c) for c in randomstring.unicode.blocks[block] if good_char(chr(c))])
 
