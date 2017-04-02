@@ -48,16 +48,22 @@ class RangeArg:
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate random strings')
-    parser.add_argument('-c', '--characters', type=str,
-                        help="List of characters to include in the generated strings")
-    parser.add_argument('-u', '--unicode', action='store_true', default=False,
-                        help="Use unicode characters")
-    parser.add_argument('-U', '--unicode-blocks', type=str,
-                        help="Use Unicode characters from the given block")
-    parser.add_argument('-n', '--number', type=int, default=1,
+    parser.add_argument('-n', '--count', type=int, default=1,
                         help="Number of strings to generate (default: 1)")
     parser.add_argument('-l', '--length', type=RangeArg, default=RangeArg("8-12"),
                         help="Length of the string (default: \"8-12\")")
+
+    chr_parser = parser.add_argument_group("Character Set Options")
+    chr_group = chr_parser.add_mutually_exclusive_group()
+    chr_group.add_argument('-c', '--characters', type=str,
+                           help="List of characters to include in the generated strings")
+    chr_group.add_argument('-u', '--unicode', action='store_true', default=False,
+                           help="Use unicode characters")
+    chr_group.add_argument('-U', '--unicode-blocks', type=str,
+                           help="Use Unicode characters from the given block")
+    chr_group.add_argument('-A', '--ascii', action='store_true', default=False,
+                           help="Use printable non-whitespace ASCII characters")
+
     return parser.parse_args()
 
 
@@ -78,15 +84,19 @@ def main():
 
     args = parse_args()
 
-    if args.number == 0:
+    if args.count == 0:
         seq = itertools.repeat(None)
     else:
-        seq = range(args.number)
+        seq = range(args.count)
 
-    characters = string.ascii_letters + string.digits
+
 
     if args.characters:
         characters = args.characters
+    elif args.ascii:
+        characters = string.ascii_letters + string.digits + string.punctuation
+    else:
+        characters = string.ascii_letters + string.digits
 
     if args.unicode_blocks:
         if args.unicode_blocks == "help":
