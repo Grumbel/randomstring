@@ -5,18 +5,26 @@ The `randomstring` tool allows the generation of random strings. The
 length and characters can be choosen on command line:
 
     $ randomstring --help
-    usage: randomstring [-h] [-c CHARACTERS] [-n NUMBER] [-l LENGTH]
+    usage: randomstring [-h] [-n COUNT] [-l LENGTH]
+                        [-c CHARACTERS | -u | -U UNICODE_BLOCKS | -A]
 
     Generate random strings
 
     optional arguments:
       -h, --help            show this help message and exit
-      -c CHARACTERS, --characters CHARACTERS
-                            Characters to include in the generated strings
-      -n NUMBER, --number NUMBER
-                            Number of strings to generate (default: 0)
+      -n COUNT, --count COUNT
+                            Number of strings to generate (default: 1)
       -l LENGTH, --length LENGTH
                             Length of the string (default: "8-12")
+
+    Character Set Options:
+      -c CHARACTERS, --characters CHARACTERS
+                            List of characters to include in the generated strings
+      -u, --unicode         Use unicode characters
+      -U UNICODE_BLOCKS, --unicode-blocks UNICODE_BLOCKS
+                            Use Unicode characters from the given block
+      -A, --ascii           Use printable non-whitespace ASCII characters
+
 
 Example usage:
 --------------
