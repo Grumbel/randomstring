@@ -19,34 +19,34 @@ import random
 import unicodedata
 
 
-def make_random_string(characters: str, length_range: range) -> str:
+def make_random_string(characters: str, length_range: range, rng: random.Random) -> str:
     result = ""
 
-    length = random.randint(length_range.start, length_range.stop - 1)
+    length = rng.randint(length_range.start, length_range.stop - 1)
     for _ in range(length):
-        result += random.choice(characters)
+        result += rng.choice(characters)
 
     return result
 
 
-def random_unicode_chr() -> str:
+def random_unicode_chr(rng: random.Random) -> str:
     # See:
     # http://www.fileformat.info/info/unicode/category/index.htm
     # http://stackoverflow.com/questions/1477294/generate-random-utf-8-string-in-python
     while True:
-        c = chr(random.randint(0, 0x10ffff))
+        c = chr(rng.randint(0, 0x10ffff))
         cat = unicodedata.category(c)
 
         if cat not in ['Cc', 'Cf', 'Cn', 'Co', 'Cs']:
             return c
 
 
-def make_random_unicode_string(length_range: range) -> str:
+def make_random_unicode_string(length_range: range, rng: random.Random) -> str:
     result = ""
 
-    length = random.randint(length_range.start, length_range.stop - 1)
+    length = rng.randint(length_range.start, length_range.stop - 1)
     for _ in range(length):
-        result += random_unicode_chr()
+        result += random_unicode_chr(rng)
 
     return result
 

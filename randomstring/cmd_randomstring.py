@@ -17,12 +17,13 @@
 
 from typing import List, Iterable
 
-import io
-import sys
-import string
-import re
 import argparse
+import io
 import itertools
+import re
+import secrets
+import string
+import sys
 import unicodedata
 
 import randomstring.unicode
@@ -113,11 +114,13 @@ def main(argv: List[str]) -> None:
         for block in args.unicode_blocks.split(","):
             characters += "".join([chr(c) for c in randomstring.unicode.blocks[block] if good_char(chr(c))])
 
+    rng = secrets.SystemRandom()
+
     for _ in seq:
         if args.unicode:
-            text = make_random_unicode_string(args.length.as_range())
+            text = make_random_unicode_string(args.length.as_range(), rng)
         else:
-            text = make_random_string(characters, args.length.as_range())
+            text = make_random_string(characters, args.length.as_range(), rng)
 
         print(text)
 
