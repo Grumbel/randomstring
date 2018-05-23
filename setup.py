@@ -25,7 +25,7 @@ setup(name='randomstring',
       scripts=[],
       entry_points={
           'console_scripts': [
-              'randomstring = randomstring.cmd_randomstring:main',
+              'randomstring = randomstring.cmd_randomstring:main_entrypoint',
           ],
           'gui_scripts': []
           },

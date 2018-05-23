@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from typing import List, Iterable
+
 import io
 import sys
 import string
@@ -27,9 +29,9 @@ import randomstring.unicode
 from randomstring.randomstring import make_random_string, make_random_unicode_string
 
 
-class RangeArg:
+class RangeArg:  # pylint: disable=R0903
 
-    def __init__(self, text):
+    def __init__(self, text: str) -> None:
         m = re.match(r"([0-9]+)-([0-9]+)", text)
         if m is not None:
             self.start = int(m.group(1))
@@ -42,11 +44,14 @@ class RangeArg:
             else:
                 raise Exception("Couldn't convert '{}' to range".format(text))
 
-    def as_range(self):
+    def as_range(self) -> range:
         return range(self.start, self.stop)
 
+    def __str__(self) -> str:
+        return "{}-{}".format(self.start, self.stop)
 
-def parse_args():
+
+def parse_args(args: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Generate random strings')
     parser.add_argument('-n', '--count', type=int, default=1,
                         help="Number of strings to generate (default: 1)")
@@ -64,14 +69,15 @@ def parse_args():
     chr_group.add_argument('-A', '--ascii', action='store_true', default=False,
                            help="Use printable non-whitespace ASCII characters")
 
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 
-def good_char(c):
+def good_char(c: str) -> bool:
     cat = unicodedata.category(c)
     return cat not in ['Cc', 'Cf', 'Cn', 'Co', 'Cs']
 
-def main():
+
+def main(argv: List[str]) -> None:
     # Python 3.5.2 still doesn't have "surrogateescape" enabled by
     # default on stdout/stderr, so we have to do it manually. Test with:
     #   print(os.fsdecode(b"\xff"))
@@ -82,14 +88,13 @@ def main():
                                   encoding='utf-8', errors="surrogateescape",
                                   line_buffering=True)
 
-    args = parse_args()
+    args = parse_args(argv[1:])
 
+    seq: Iterable
     if args.count == 0:
         seq = itertools.repeat(None)
     else:
         seq = range(args.count)
-
-
 
     if args.characters:
         characters = args.characters
@@ -115,6 +120,10 @@ def main():
             text = make_random_string(characters, args.length.as_range())
 
         print(text)
+
+
+def main_entrypoint() -> None:
+    main(sys.argv)
 
 
 # EOF #

@@ -2,7 +2,7 @@ Random String Generator
 =======================
 
 The `randomstring` tool allows the generation of random strings. The
-length and characters can be choosen on command line:
+length and character set can be choosen on command line:
 
     $ randomstring --help
     usage: randomstring [-h] [-n COUNT] [-l LENGTH]

@@ -19,15 +19,17 @@ import random
 import unicodedata
 
 
-def make_random_string(characters, length_range):
+def make_random_string(characters: str, length_range: range) -> str:
     result = ""
+
     length = random.randint(length_range.start, length_range.stop - 1)
-    for i in range(length):
+    for _ in range(length):
         result += random.choice(characters)
+
     return result
 
 
-def random_unicode_chr():
+def random_unicode_chr() -> str:
     # See:
     # http://www.fileformat.info/info/unicode/category/index.htm
     # http://stackoverflow.com/questions/1477294/generate-random-utf-8-string-in-python
@@ -39,12 +41,13 @@ def random_unicode_chr():
             return c
 
 
-def make_random_unicode_string(length_range):
+def make_random_unicode_string(length_range: range) -> str:
     result = ""
 
     length = random.randint(length_range.start, length_range.stop - 1)
-    for i in range(length):
+    for _ in range(length):
         result += random_unicode_chr()
+
     return result
 
 

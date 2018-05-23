@@ -17,7 +17,7 @@
 SOURCES := $(wildcard \
   randomstring/*.py)
 
-all: flake test # autopep
+all: mypyverbose pylint flake test # autopep
 
 autopep:
 	autopep8  --max-line=120  --in-place $(SOURCES)
@@ -26,7 +26,32 @@ autopep:
 # 	python3 -m unittest discover -s tests/
 
 flake:
-	flake8 --max-line-length=100 $(SOURCES)
+	flake8 --max-line-length=120 $(SOURCES)
+
+mypy:
+	mypy \
+        --incremental \
+	--ignore-missing-imports \
+	--follow-imports skip \
+	--warn-return-any \
+	--warn-unused-ignores \
+	--warn-incomplete-stub \
+	--warn-redundant-casts \
+	$(SOURCES)
+
+mypyverbose:
+	export MYPYPATH=/usr/lib/python3/dist-packages/; \
+	mypy \
+        --incremental \
+	--ignore-missing-imports \
+	--follow-imports silent \
+	--check-untyped-defs \
+	--warn-return-any \
+	--warn-unused-ignores \
+	--warn-incomplete-stub \
+	--warn-redundant-casts \
+	--disallow-untyped-defs \
+	$(SOURCES)
 
 PYLINT_TARGETS := $(addprefix .pylint/, $(SOURCES))
 
@@ -43,6 +68,6 @@ clean:
 install:
 	sudo -H pip3 install --force-reinstall --ignore-installed --no-deps .
 
-.PHONY: autopep test flake pylint clean
+.PHONY: all autopep test flake pylint clean mypy mypyverbose install clean
 
 # EOF #

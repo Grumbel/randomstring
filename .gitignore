@@ -1,3 +1,5 @@
 *~
+/.mypy_cache/
+/.pylint/
 /randomstring.egg-info/
 __pycache__/
