@@ -20,6 +20,7 @@ from typing import List, Iterable
 import argparse
 import io
 import itertools
+import random
 import re
 import secrets
 import string
@@ -58,6 +59,8 @@ def parse_args(args: List[str]) -> argparse.Namespace:
                         help="Number of strings to generate (default: 1)")
     parser.add_argument('-l', '--length', type=RangeArg, default=RangeArg("8-12"),
                         help="Length of the string (default: \"8-12\")")
+    parser.add_argument('-f', '--fast', action='store_true', default=False,
+                        help="Use fast random numbers instead of secure")
 
     chr_parser = parser.add_argument_group("Character Set Options")
     chr_group = chr_parser.add_mutually_exclusive_group()
@@ -114,7 +117,10 @@ def main(argv: List[str]) -> None:
         for block in args.unicode_blocks.split(","):
             characters += "".join([chr(c) for c in randomstring.unicode.blocks[block] if good_char(chr(c))])
 
-    rng = secrets.SystemRandom()
+    if args.fast:
+        rng = random.Random()
+    else:
+        rng = secrets.SystemRandom()
 
     for _ in seq:
         if args.unicode:
