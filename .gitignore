@@ -3,3 +3,4 @@
 /.pylint/
 /randomstring.egg-info/
 __pycache__/
+/result
