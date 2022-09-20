@@ -11,7 +11,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
        in rec {
-        packages = flake-utils.lib.flattenTree rec {
+        packages = rec {
           randomstring = pkgs.python3Packages.buildPythonPackage rec {
             name = "randomstring";
             src = self;
@@ -19,7 +19,15 @@
               pkgs.python3Packages.setuptools
             ];
           };
+          default = randomstring;
         };
-        defaultPackage = packages.randomstring;
-      });
+
+        apps = rec {
+          randomstring = flake-utils.lib.mkApp {
+            drv = packages.randomstring;
+          };
+          default = randomstring;
+        };
+       }
+    );
 }
